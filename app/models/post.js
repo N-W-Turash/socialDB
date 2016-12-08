@@ -6,6 +6,8 @@ var PostsSchema   = new Schema({
     user_id: Number,
     title: String,
     body: String
+},{
+    timestamps: true
 });
 
 PostsSchema.plugin(mongoosePaginate);

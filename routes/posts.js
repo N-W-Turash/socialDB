@@ -16,8 +16,8 @@ router.route('/')
 
         post.save(function(err) {
             if (err)
-                res.send(err);
-            res.json({ message: 'Post created!' });
+                res.status(400).send(err);
+            res.json(post);
         });
 
     })
@@ -25,7 +25,7 @@ router.route('/')
     // get all the users (accessed at GET http://localhost:8080/api/posts)
     .get(function(req, res) {
 
-        Post.paginate({}, { page: parseInt(req.query.page) || 1, limit: parseInt(req.query.limit) || 20}, function(err, post) {
+        Post.paginate({}, {  sort: { createdAt: -1 }, page: parseInt(req.query.page) || 1, limit: parseInt(req.query.limit) || 20}, function(err, post) {
             if (err){
                 console.error(err);
                 res.send(err);
