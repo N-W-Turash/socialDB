@@ -24,9 +24,9 @@ router.route('/:post_id')
             if (err)
                 res.send(err);
 
-            post.user_id = req.body.user_id;
-            post.title = req.body.title;
-            post.body = req.body.body;
+           // post.user_id = req.body.user_id;
+            post.title = req.body.editTitle;
+            post.body = req.body.editBody;
 
             // save the bear
             post.save(function(err) {

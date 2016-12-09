@@ -21,6 +21,7 @@ router.route('/')
         });
 
     })
+        //var order = req.query.order == 'desc' ? -1 : 1;
 
     // get all the users (accessed at GET http://localhost:8080/api/posts)
     .get(function(req, res) {
