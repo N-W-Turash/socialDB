@@ -1,6 +1,17 @@
 var express = require("express");
 var router = express.Router();
 var Photo     = require('../app/models/photo');
+var multer  = require('multer');
+
+var storage = multer.diskStorage({
+    destination: function (request, file, callback) {
+        callback(null, '/example/uploads');
+    },
+    filename: function (request, file, callback) {
+        console.log(file);
+        callback(null, file.originalname)
+    }
+});
 
 // on routes that end in /api/photos/
 // ----------------------------------------------------
@@ -32,6 +43,6 @@ router.route('/')
                 res.json(photo);
             }
         });
-    });
+    })
 
 module.exports = router;

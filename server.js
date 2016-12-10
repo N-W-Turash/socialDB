@@ -37,9 +37,12 @@ app.use('/userseeder', userSeeder);
 var postSeeder = require('./seeders/postSeeder');
 var postsRoute = require('./routes/posts');
 var postRoute = require('./routes/post');
+var photoUploadRoute = require('./routes/photoUpload')
 app.use('/api/posts', postsRoute);
 app.use('/api/posts', postRoute);
 app.use('/postseeder', postSeeder);
+app.use('/api/upload', photoUploadRoute);
+
 
 var photoSeeder = require('./seeders/photoSeeder');
 var photosRoute = require('./routes/photos');

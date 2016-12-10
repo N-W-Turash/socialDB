@@ -26,7 +26,9 @@ router.route('/')
     // get all the users (accessed at GET http://localhost:8080/api/posts)
     .get(function(req, res) {
 
-        Post.paginate({}, {  sort: { createdAt: -1 }, page: parseInt(req.query.page) || 1, limit: parseInt(req.query.limit) || 20}, function(err, post) {
+        var order = req.query.sortVal == 'most recent' ? -1 : 1;
+
+        Post.paginate({}, {  sort: { createdAt: order }, page: parseInt(req.query.page) || 1, limit: parseInt(req.query.limit) || 20}, function(err, post) {
             if (err){
                 console.error(err);
                 res.send(err);
