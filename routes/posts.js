@@ -29,6 +29,7 @@ router.route('/')
         var order = req.query.sortVal == 'most recent' ? -1 : 1;
 
         var search = req.query.searchText;
+        //search = /search/i
         var query = {};
         if(search){
             query['title'] = search;
