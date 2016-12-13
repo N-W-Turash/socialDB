@@ -23,7 +23,12 @@ var port = process.env.PORT || 3000;        // set our port
 var mongoose   = require('mongoose');
 mongoose.connect('mongodb://localhost:27017/socialDB'); // connect to our database
 
-app.use(cors(corsOptions))
+app.use('/uploads', express.static('uploads'))
+
+app.set('views', __dirname);
+app.set('view engine', 'html');
+
+app.use(cors(corsOptions));
 
 // ROUTES FOR OUR API
 // =============================================================================
@@ -50,6 +55,7 @@ var photoRoute = require('./routes/photo');
 app.use('/api/photos', photosRoute);
 app.use('/api/photos', photoRoute);
 app.use('/photoseeder', photoSeeder);
+
 
 var router = express.Router();              // get an instance of the express Router
 

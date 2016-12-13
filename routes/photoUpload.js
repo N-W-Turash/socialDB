@@ -1,81 +1,71 @@
-var multer  = require('multer');
-var upload = multer({ dest: 'uploads/' });
-
 var express = require("express");
 var router = express.Router();
-//var Photo     = require('../app/models/photo');
 
-router.get('/', function(req, res, next){
-    res.send("response with a resource");
-    next();
-})
+var fs = require("fs");
+var multer = require('multer');
 
-router.post('/', upload.any(), function(req, res){
-    res.send(req.files);
-})
-
-module.exports = router;
-
-
-/*var express = require("express");
-var router = express.Router();
 var Photo     = require('../app/models/photo');
-;
-var multer  = require('multer');
+
+var fileName = null;
+
 var storage = multer.diskStorage({
     destination: function (req, file, cb) {
-        cb(null, __dirname+'/tmp/my-uploads')
+        cb(null, './uploads/');
     },
     filename: function (req, file, cb) {
-        cb(null, file.fieldname + '-' + Date.now())
+        fileName = Date.now() + '.jpg'
+        cb(null, fileName ); //Appending .jpg
     }
 })
 
-var upload = multer({ dest: 'uploads/' }).single('avatar')
+var upload = multer({ storage: storage });
 
-// var storage = multer.diskStorage({
-//     destination: function (request, file, callback) {
-//         callback(null, '/example/uploads');
-//     },
-//     filename: function (request, file, callback) {
-//         console.log(file);
-//         callback(null, file.originalname)
-//     }
-// });
-
-// on routes that end in /api/photos/
-// ----------------------------------------------------
 router.route('/')
 
-// create a photo (accessed at POST http://localhost:8080/api/photos)
-    .post(function(req, res) {
+// create a user (accessed at POST http://localhost:8080/api/posts)
+    .get(function (req, res) {
+        res.sendfile("index.html");
+    })
 
+    .post(upload.single("file"), function (req, res) {
 
+        //console.log(req.file);
+        var file = __dirname + "/" + req.file.originalname;
+        var title = req.body.title;
+        fs.readFile( req.file.path, function (err, data) {
+            fs.writeFile(file, data, function (err) {
 
-        upload(req, res, function (err) {
-            if (err) {
-               console.log("error----",err)
-                res.send(err);
-            }
-            console.log("-------",req.body);
-            res.send(req.file);
+                var response;
 
+                if( err ){
+                    console.error( err );
+                    response = {
+                        message: 'Sorry, file couldn\'t be uploaded.',
+                        url: file,
+                        filename: req.file.originalname,
+                        title: title
+                    };
+                }else{
+                    /*response = {
+                        message: 'File uploaded successfully',
+                        url: file,
+                        filename: req.file.originalname,
+                        title: title
+                    };*/
 
-            // Everything went fine
-        })
-        return;
+                    var photo = new Photo();
+                    photo.title = title;
+                    photo.imageUrl = 'http://localhost:3000/uploads/' + fileName;
 
-
-        var photo = new Photo();
-        photo.title = req.body.title;
-        photo.imageUrl = req.body.imageUrl;
-
-        photo.save(function(err) {
-            if (err)
-                res.send(err);
-            res.json({ message: 'Photo created!' });
+                    photo.save(function(err) {
+                        if (err)
+                            res.send(err);
+                        res.json(photo);
+                    });
+                }
+                //res.end( JSON.stringify( response ) );
+            });
         });
+    })
 
-    })*/
-
-//module.exports = router;
+module.exports = router;
